@@ -1,12 +1,28 @@
 import requests
+from datetime import date
+
+# TESTING
+import urllib.request
+
 
 
 FIVE_DE_ORO_RESULTS_URL = 'https://www3.labanca.com.uy/resultados/cincodeoro'
 QUINIELA_RESULTS_URL = 'http://servicios.lanacion.com.ar/loterias/quiniela-montevideo'
-TOMBOLA_RESULTS_URL = 'https://www3.labanca.com.uy/resultados/tombola'
+TOMBOLA_RESULTS_URL = 'https://www.nacionalloteria.com/uruguay/tombola.php?del-dia={0}-{1}-{2}#listapubli'
 
 
+def test():
+    response = urllib.request.urlopen('http://python.org/')
+    html = response.read()
+    print(html)
 
+def get_today_date():
+    today = date.today()
+    # dd/mm/YY
+    #d1 = today.strftime("%d/%m/%Y")
+    d1 = today.strftime("%Y/%m/%d")
+    d1 = d1.split("/")
+    return [d1[0], d1[1], d1[2]]
 
 def extract_results_five_de_oro():
     """
@@ -46,7 +62,7 @@ def extract_results_five_de_oro():
 
 def extract_results_quiniela():
     """
-    Returns a list with two lists containing the main prize
+    Returns a list with two lists containing the nocturne and matutine prize
     """
     response = requests.get(QUINIELA_RESULTS_URL)
     index1_text = '<div class="quiniela tabla floatFix">'
@@ -62,21 +78,43 @@ def extract_results_quiniela():
     html_text2 = html_text2[html_text2.find(sub_index1):]
     html_text1 = html_text1[:index0]
     html_text2 = html_text2[:html_text2.find(sub_index2)]
-    
+
     html_text1 = html_text1.split('<td>')
     html_text1.pop(0)
     html_text2 = html_text2.split('<td>')
     html_text2.pop(0)
-    
-    for i in html_text1: 
-        print(i[:4])
-    print("-------------------------")
+    nocturne_prize = []
+    matutine_prize = []
+    for i in html_text1:
+        nocturne_prize.append(int(i[:3]))
     for i in html_text2:
-        print(i[:4])
-    return 
+        matutine_prize.append(int(i[:3]))
+    return [nocturne_prize, matutine_prize]
+
+
+def extract_results_tombola(year, month, day):
+    """
+    Returns a list with two lists containing the nocturne and matutine prize
+    """
+    #response = requests.get(TOMBOLA_RESULTS_URL.format(year, month, day))
+    response = urllib.request.urlopen(TOMBOLA_RESULTS_URL.format(year, month, day))
+    text = response.read()  # html
+    index1_text = '<table class="table table-condensed">'
+    index2_text = '</div>'
+    sub_index1 = '<tbody>'
+    sub_index2 = '</tbody>'
+    #text = response.text
+    print(text)
+    #print(text.find(index1_text.encode('utf-8')))
+    return
+    html_text1 = text[text.find(index1_text):]
+    #html_text1 = html_text1[:html_text1.find(index2_text)]
+    print(html_text1)
+    return []
+
 
 class FiveDeOroPrizeChecker():
-
+    """Checks different prizes"""
     def __init__(self, a, b, c, d, e, results_list):
         self.choices = [a, b, c, d, e]
         self.results_list = results_list
@@ -90,6 +128,9 @@ class FiveDeOroPrizeChecker():
                 success += 1
         return success == 5
 
-extract_results_quiniela()
+#test()
+today = get_today_date()
+extract_results_tombola(today[0], today[1], today[2])
+#extract_results_quiniela()
 #checker = FiveDeOroPrizeChecker(16, 26, 35, 39, 40, extract_results_five_de_oro())
 #print("REVANCHA WIN:", checker.check_revancha())
