@@ -1,20 +1,26 @@
 import requests
 from datetime import date
-
-# TESTING
-import urllib.request
+from requests_html import HTMLSession
 
 
 
-FIVE_DE_ORO_RESULTS_URL = 'https://www3.labanca.com.uy/resultados/cincodeoro'
-QUINIELA_RESULTS_URL = 'http://servicios.lanacion.com.ar/loterias/quiniela-montevideo'
+CINCO_DE_ORO_RESULTS_URL_1 = 'https://www3.labanca.com.uy/resultados/cincodeoro'
+# Alternative:
+CINCO_DE_ORO_RESULTS_URL_2 = 'https://www.nacionalloteria.com/uruguay/5deoro.php'
+
+QUINIELA_RESULTS_URL_1 = 'https://www.nacionalloteria.com/uruguay/quiniela.php?del-dia={0}-{1}-{2}#listapubli'
+# Alternative:
+QUINIELA_RESULTS_URL_2 = 'http://servicios.lanacion.com.ar/loterias/quiniela-montevideo'
+
 TOMBOLA_RESULTS_URL = 'https://www.nacionalloteria.com/uruguay/tombola.php?del-dia={0}-{1}-{2}#listapubli'
 
 
-def test():
-    response = urllib.request.urlopen('http://python.org/')
-    html = response.read()
-    print(html)
+def get_decoded_url_content(url, decode_format='utf8'):
+    """Returns the decoded HTML (including javascript) by a given url"""
+    session = HTMLSession()
+    response = session.get(url)
+    response.html.render()
+    return response.content.decode(decode_format)
 
 def get_today_date():
     today = date.today()
@@ -22,13 +28,14 @@ def get_today_date():
     #d1 = today.strftime("%d/%m/%Y")
     d1 = today.strftime("%Y/%m/%d")
     d1 = d1.split("/")
-    return [d1[0], d1[1], d1[2]]
+    return (d1[0], d1[1], d1[2])
 
-def extract_results_five_de_oro():
+def extract_results_cinco_de_oro_2():
     """
+    Second option
     Returns a list with two lists containing the main & the second prize
     """
-    response = requests.get(FIVE_DE_ORO_RESULTS_URL)
+    response = requests.get(CINCO_DE_ORO_RESULTS_URL_1)
     index1_text = '<ul class="bolillas small-block-grid-7">'
     index2_text = '</ul>'
     index1_text_inline = 'alt="'
@@ -59,12 +66,12 @@ def extract_results_five_de_oro():
                 second_prize.append(int(line))
     return [main_prize, second_prize]
 
-
-def extract_results_quiniela():
+def extract_results_quiniela_2():
     """
+    Second option
     Returns a list with two lists containing the nocturne and matutine prize
     """
-    response = requests.get(QUINIELA_RESULTS_URL)
+    response = requests.get(QUINIELA_RESULTS_URL_1)
     index1_text = '<div class="quiniela tabla floatFix">'
     index2_text = '<div class="datafactory">'
     sub_index1 = '<tbody>'
@@ -91,27 +98,65 @@ def extract_results_quiniela():
         matutine_prize.append(int(i[:3]))
     return [nocturne_prize, matutine_prize]
 
-
-def extract_results_tombola(year, month, day):
+def extract_results_tombola_1(year, month, day):
     """
+    First option
     Returns a list with two lists containing the nocturne and matutine prize
     """
-    #response = requests.get(TOMBOLA_RESULTS_URL.format(year, month, day))
-    response = urllib.request.urlopen(TOMBOLA_RESULTS_URL.format(year, month, day))
-    text = response.read()  # html
-    index1_text = '<table class="table table-condensed">'
-    index2_text = '</div>'
-    sub_index1 = '<tbody>'
-    sub_index2 = '</tbody>'
-    #text = response.text
-    print(text)
-    #print(text.find(index1_text.encode('utf-8')))
-    return
-    html_text1 = text[text.find(index1_text):]
-    #html_text1 = html_text1[:html_text1.find(index2_text)]
-    print(html_text1)
-    return []
+    html_response = get_decoded_url_content(TOMBOLA_RESULTS_URL.format(year, month, day))
+    first_index= '<a id="premios">'
+    last_index = '</td></tr></tbody></table></td></tr></table></div>'
+    index1 = html_response.find(first_index)
+    if index1 == -1:
+        print("First index not found")
+        return None
+    html1 = html_response[index1:] # html1 cropped to start from first_index
+    index2 = html1.find(last_index)
+    if index2 == -1:
+        print("Second index not found")
+        return None
+    html1 = html1[:index2]
+    return html1
 
+def extract_results_quiniela_1(year, month, day):
+    """
+    First option
+    Returns a list with two lists containing the nocturne and matutine prize
+    """
+    html_response = get_decoded_url_content(QUINIELA_RESULTS_URL_2.format(year, month, day))
+    first_index= '<a id="premios">'
+    last_index = '</td></tr></tbody></table></td></tr></table></div>'
+    index1 = html_response.find(first_index)
+    if index1 == -1:
+        print("First index not found")
+        return None
+    html1 = html_response[index1:] # html1 cropped to start from first_index
+    index2 = html1.find(last_index)
+    if index2 == -1:
+        print("Second index not found")
+        return None
+    html1 = html1[:index2]
+    return html1
+
+def extract_results_cinco_de_oro_1(year, month, day):
+    """
+    First option
+    Returns a list with two lists containing the nocturne and matutine prize
+    """
+    html_response = get_decoded_url_content(CINCO_DE_ORO_RESULTS_URL_2)
+    first_index= '<section id="listaResultados">'
+    last_index = '</section>'
+    index1 = html_response.find(first_index)
+    if index1 == -1:
+        print("First index not found")
+        return None
+    html1 = html_response[index1:] # html1 cropped to start from first_index
+    index2 = html1.find(last_index)
+    if index2 == -1:
+        print("Second index not found")
+        return None
+    html1 = html1[:index2]
+    return html1
 
 class FiveDeOroPrizeChecker():
     """Checks different prizes"""
@@ -128,9 +173,10 @@ class FiveDeOroPrizeChecker():
                 success += 1
         return success == 5
 
-#test()
+# test()
 today = get_today_date()
-extract_results_tombola(today[0], today[1], today[2])
-#extract_results_quiniela()
+print(extract_results_tombola_1(today[0], today[1], '16'))
+print(extract_results_quiniela_1(today[0], today[1], '16'))
+print(extract_results_cinco_de_oro_1(today[0], today[1], '16'))
 #checker = FiveDeOroPrizeChecker(16, 26, 35, 39, 40, extract_results_five_de_oro())
 #print("REVANCHA WIN:", checker.check_revancha())
