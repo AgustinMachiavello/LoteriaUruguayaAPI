@@ -1,0 +1,1 @@
+"""Quiniela model"""

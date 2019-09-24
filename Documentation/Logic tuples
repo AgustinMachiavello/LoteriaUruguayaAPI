@@ -1,0 +1,21 @@
+GAME(GameId__, Name__, UpdateDay, UpdateTime, CreatedDate, UpdateDate, uniqueResultPerDay)
+
+TOMBOLA(TombolaId__) Game.GameId --> TombolaID
+
+CINCODEORO(CincoDeOroId__) Game.GameId --> CincoDeOroId
+
+..
+
+RESULT(ResultId__, GameId__, Date, CreatedDate, UpdatedDate)
+
+VESPERTINE_NOCTURNE_RESULT(VNResultId__, GameId__, isVespertine) Result.ResultId --> VNResultId
+
+HISTORY(HistoryId__, UserId__) User.UserId --> UserId
+
+REQUEST LOG(HistoryId__, RequestLogId__, GameId, Date, Time) History.HystoryId --> HistoryId
+
+SUBSCRIPTION(SubscriptionId__, UserId__, Type, StartDate, EndDate) User.UserId --> UserId
+
+USER(UserId__, Email) Email --> Unique
+
+

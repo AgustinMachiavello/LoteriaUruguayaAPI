@@ -1,0 +1,5 @@
+EL sistema va a funcionar como una RESTFUL API, va a permitir realizar consultas HTML acerca de resultados de diferentes juegos de loteria -con la idea de ir agregando cada vez más- dado una fecha. Además, se podrá corroborar jugadas dado un set de resutlados y una fecha (de nuevo, si no se proporciona fecha se obvia que es la de hoy).
+Algunos juegos cuentan con varios resutlados por día, siendo los premios matutinos y vespertinos.
+Las páginas de las cuales se hace scrapping de datos actualizan sus resultados ciertos días a ciertas horas, por lo tanto el servidor deberá de automáticamente obtener esos resutlados y guardarlos en su base de datos.
+Los usuarios se pueden registrar en la página web, en dónde se le otorgará un token para realizar solicitudes. Los usuarios están limitados a 5 consultas por día, teniendo la opción se pagar una subscripción (mensual) y así tener consultas ilimitadas.
+(si no se da fecha devuevle los resutlados de hoy)

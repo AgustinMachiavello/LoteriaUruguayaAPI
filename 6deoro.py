@@ -1,8 +1,15 @@
+# Requests
 import requests
-from datetime import date
 from requests_html import HTMLSession
+
+# Datetime
+from datetime import date
+
+# Threading
 import threading
 
+# lxml scrapping
+from lxml import html
 
 
 CINCO_DE_ORO_RESULTS_URL_1 = 'https://www3.labanca.com.uy/resultados/cincodeoro'
@@ -34,7 +41,7 @@ def crop_after(text, start=0, end=-1):
     return text
 
 def get_decoded_url_content(url, decode_format='utf8'):
-    """Returns the decoded HTML (including javascript) by a given url"""
+    """Returns a string with the decoded HTML (including javascript) by a given url"""
     session = HTMLSession()
     response = session.get(url)
     response.html.render()
@@ -121,8 +128,7 @@ def extract_results_tombola_1(year, month, day):
     First option
     Returns a list with two lists containing the nocturne and matutine prize
     """
-    #html_response = get_decoded_url_content(TOMBOLA_RESULTS_URL.format(year, month, day))
-    html_response = """<a id="premios"></a><div class="panel panel-default"><div class="panel-heading"><h3>Tombola Vespertina del Lunes 16 de Septiembre de 2019</h3></div><table class="table table-condensed"><tr><td>  <table class="table table-bordered table-condensed">  <tbody><tr class=""><td class="res-sm text-center">02</td></tr><tr class=""><td class="res-sm text-center">07</td></tr><tr class=""><td class="res-sm text-center">10</td></tr><tr class=""><td class="res-sm text-center">13</td></tr><tr class=""><td class="res-sm text-center">16</td></tr></tbody></table></td><td>  <table class="table table-bordered table-condensed">  <tbody><tr class="info"><td class="res-sm text-center">23</td></tr><tr class="info"><td class="res-sm text-center">26</td></tr><tr class="info"><td class="res-sm text-center">27</td></tr><tr class="info"><td class="res-sm text-center">31</td></tr><tr class="info"><td class="res-sm text-center">35</td></tr></tbody></table></td><td>  <table class="table table-bordered table-condensed">  <tbody><tr class=""><td class="res-sm text-center">37</td></tr><tr class=""><td class="res-sm text-center">39</td></tr><tr class=""><td class="res-sm text-center">41</td></tr><tr class=""><td class="res-sm text-center">44</td></tr><tr class=""><td class="res-sm text-center">46</td></tr></tbody></table></td><td>  <table class="table table-bordered table-condensed">  <tbody><tr class="info"><td class="res-sm text-center">53</td></tr><tr class="info"><td class="res-sm text-center">56</td></tr><tr class="info"><td class="res-sm text-center">64</td></tr><tr class="info"><td class="res-sm text-center">87</td></tr><tr class="info"><td class="res-sm text-center">96</td></tr></tbody></table></td></tr></table></div>"""
+    html_response = get_decoded_url_content(TOMBOLA_RESULTS_URL.format(year, month, day))
     first_index= '<a id="premios">'
     last_index = '</td></tr></tbody></table></td></tr></table></div>'
     cropped_text = crop_after(html_response, first_index, last_index)
