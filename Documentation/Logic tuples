@@ -1,9 +1,4 @@
 GAME(GameId__, Name__, UpdateDay, UpdateTime, CreatedDate, UpdateDate, uniqueResultPerDay)
-
-TOMBOLA(TombolaId__) Game.GameId --> TombolaID
-
-CINCODEORO(CincoDeOroId__) Game.GameId --> CincoDeOroId
-
 ..
 
 RESULT(ResultId__, GameId__, Date, CreatedDate, UpdatedDate)

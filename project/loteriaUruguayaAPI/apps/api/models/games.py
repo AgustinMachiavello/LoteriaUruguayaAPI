@@ -8,22 +8,24 @@ from django.utils import timezone
 
 
 class Game(models.Model):
-	game_update_day_choices = (
-		(1, "Monday"),
-		(2, "Tuesday"),
-		(3, "Wednesday"),
-		(4, "Thursday"),
-		(5, "Friday"),
-		(6, "Saturday"),
-		(7, "Sunday"),
-	)
+	"""Game model
+
+	Represents de lottery game
+	"""
 	game_id = models.AutoField(primary_key=True)
-	game_name = models.CharField(primary_key=True, max_length=50)
-	game_update_date = models.PositiveIntegerField(choices=game_update_day_choices)
-	game_update_time = models.TimeField()
+	game_name = models.CharField(max_length=50, unique=True)
 	game_created_at = models.DateTimeField(default=timezone.now, editable=False)
 	game_updated_at = models.DateTimeField(default=timezone.now, editable=False)
 	game_has_unique_result_per_day = models.BooleanField(null=False, blank=False)
 
+	def __str__(self):
+		return "{0}".format(self.game_name)
+
+	def save(self, *args, **kwargs):
+		if not self.game_id:
+			self.created_at = timezone.now()
+		self.updated_at = timezone.now()
+		return super(Game, self).save(*args, **kwargs)
+
 	class Meta:
-		abstract = True
+		ordering = ["-game_id", "-game_created_at", ]

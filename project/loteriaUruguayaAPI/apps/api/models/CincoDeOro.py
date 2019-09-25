@@ -1,1 +1,0 @@
-"""Cinco de oro model"""

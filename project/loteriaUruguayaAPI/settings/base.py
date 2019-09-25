@@ -15,6 +15,8 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Custom user model
+AUTH_USER_MODEL = "accounts.User"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -69,7 +71,7 @@ ROOT_URLCONF = 'loteriaUruguayaAPI.urls'
 TEMPLATES = [
 	{
 		'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [os.path.join(BASE_DIR, '/templates/')],
+		'DIRS': [os.path.join(BASE_DIR, 'templates/')],
 		'APP_DIRS': True,
 		'OPTIONS': {
 			'context_processors': [
@@ -81,6 +83,17 @@ TEMPLATES = [
 		},
 	},
 ]
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    'django.core.context_processors.request',
+)
 
 WSGI_APPLICATION = 'loteriaUruguayaAPI.wsgi.application'
 
@@ -150,10 +163,10 @@ STATICFILES_FINDERS = (
 # MUST BE DIFFERENT FROM MEDIA_ROOT
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
+# STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
 
 STATICFILES_DIRS = [
-	os.path.join(BASE_DIR, 'assets'),
+	os.path.join(BASE_DIR, 'static'),
 ]
 
 
