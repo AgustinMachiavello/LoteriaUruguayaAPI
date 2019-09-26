@@ -7,11 +7,13 @@ body {
 /*--- navigation bar ---*/
 
 .navbar {
-  background:#0db665;
+  background: #002333;
 }
 
 .nav-link,
 .navbar-brand {
+  font-family: 700 16px/1 "sofia-pro",sans-serif;
+  font-weight: 700;
   color: #fff;
   cursor: pointer;
 }
@@ -20,8 +22,12 @@ body {
   margin-right: 1em !important;
 }
 
+.navbar-brand:hover {
+  color: #61c2d3;
+}
+
 .nav-link:hover {
-  color: #000;
+  color: #61c2d3;
 }
 
 .navbar-collapse {
@@ -29,7 +35,7 @@ body {
 }
 
 .header {
-  background-image: url('../img/header-skynet-green.jpg');
+  background-image: url('../img/fiber-optic-1920x1080.jpg');
   background-size: cover;
   background-position: center;
   position: relative;
@@ -52,25 +58,28 @@ body {
   text-align: center;
 }
 .description h1 {
-  color: #6ab446;
+  color: #fff;
+  font-weight: 700;
 }
 .description p {
   color: #fff;
   font-size: 1.3rem;
   line-height: 1.5;
 }
-
+/*
 .description button {
-  border:1px solid #6ab446;
-  background:#6ab446;
+  border:1px solid #0000;
+  background:#007ac0;
   border-radius: 0;
   color:#fff;
 }
+
 .description button:hover {
-  border:1px solid #fff;
-  background:#fff;
-  color:#000;
+  border:1px solid #606363;
+  background:#a8f0f6;
+  color:#153f69;
 }
+*/
 
 .features {
   margin: 4em auto;
@@ -85,8 +94,61 @@ body {
   text-transform: uppercase;
 }
 .features img {
+/*
   -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+  */
+  width: 90%;
   margin-bottom: 16px;
+}
+
+.features .form-control,
+.features input {
+    border-radius: 0;
+}
+.features .btn {
+  background-color: #17a2b8;
+  border: 1px solid #17a2b8;
+  color: #fff;
+  margin-top: 20px;
+}
+.features .btn:hover {
+  background-color: #333;
+  border: 1px solid #333;
+}
+.page-footer {
+  background-color: #222;
+  color: #ccc;
+  padding: 60px 0 30px;
+}
+
+.footer-copyright {
+  color: #666;
+  padding: 40px 0;
+}
+
+@media (max-width: 575.98px) {
+
+  .description {
+    left: 0;
+    padding: 0 15px;
+    position: absolute;
+    top: 10%;
+    transform: none;
+    text-align: center;
+  }
+
+  .description h1 {
+    font-size: 2em;
+  }
+
+  .description p {
+    font-size: 1.2rem;
+  }
+
+  .features {
+    margin: 0;
+  }
+
 }
