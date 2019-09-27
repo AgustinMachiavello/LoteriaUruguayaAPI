@@ -7,5 +7,6 @@ from django.conf import settings
 urlpatterns = [
     # Web app
     path('web/', include(('loteriaUruguayaAPI.apps.web.urls', 'web'), namespace='web')),
+    path('api/', include(('loteriaUruguayaAPI.apps.api.urls', 'web'), namespace='api')),
     path('admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

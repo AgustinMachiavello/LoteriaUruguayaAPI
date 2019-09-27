@@ -17,6 +17,7 @@ from lxml import html
 
 # Models
 from ..models.results import CincoDeOroResult
+from ..models.games import Game
 
 CINCO_DE_ORO_RESULTS_URL_1 = 'https://www3.labanca.com.uy/resultados/cincodeoro'
 # Alternative:
@@ -62,6 +63,7 @@ def extract_results_cinco_de_oro_2():
 
 def create_cinco_de_oro_prize(prize_list):
 	new_result = CincoDeOroResult.objects.create(
+		result_game_id = Game.objects.get(game_name='Cinco de oro'),
 		first_ball=prize_list[0],
 		second_ball=prize_list[1],
 		third_ball=prize_list[2],
@@ -70,4 +72,3 @@ def create_cinco_de_oro_prize(prize_list):
 		sixth_ball=prize_list[5],
 	)
 	return new_result
-

@@ -16,7 +16,7 @@ class Result(models.Model):
 	Stores the in day result of a lottery game
 	"""
 	result_id = models.AutoField(primary_key=True)
-	result_game_id = models.ForeignKey('api.Game', on_delete=models.CASCADE, related_name='results')
+
 	result_date = models.DateField(default=timezone.now)
 	result_created_at = models.DateTimeField(default=timezone.now, editable=False)
 	result_updated_at = models.DateTimeField(default=timezone.now, editable=False)
@@ -27,11 +27,15 @@ class Result(models.Model):
 		self.updated_at = timezone.now()
 		return super(Result, self).save(*args, **kwargs)
 
+	class Meta:
+		abstract = True
+
 
 class VespertineNocturneResult(Result):
 	"""Vespertine and nocturne result model
 
 	Specialization of Result model where two lottery results are played in the same day"""
+	result_game_id = models.ForeignKey('api.Game', on_delete=models.CASCADE, related_name='vn_result')
 	vn_result_is_vespertine = models.BooleanField(null=False, blank=False)
 
 
@@ -39,6 +43,7 @@ class CincoDeOroResult(Result):
 	"""Cinco de oro results
 
 	Represents the lottery result format for the game 'Cinco de oro' """
+	result_game_id = models.ForeignKey('api.Game', on_delete=models.CASCADE, related_name='cinco_de_oro_result')
 	first_ball = fields.IntegerRangeField(min_value=1, max_value=48)
 	second_ball = fields.IntegerRangeField(min_value=1, max_value=48)
 	third_ball = fields.IntegerRangeField(min_value=1, max_value=48)
